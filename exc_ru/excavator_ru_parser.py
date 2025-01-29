@@ -172,6 +172,11 @@ while stop_flag == False:
         print('Произошла непредвиденная ошибка')
         break
 
-df.to_excel(f'exc_ru_{df_date}.xlsx', index=False)
-print ('Файл записан')
+path1 = f"D:/parsing/excavator.ru/exc_ru_{df_date}.xlsx"
+path2 = f"//192.168.11.194/омиип рабочая/00_Базы/02_Базы по ценам/11_парсинг/excavator.ru/exc_ru_{df_date}.xlsx"
+
+df.to_excel(path1, index=False)
+df.to_excel(path2, index=False)
+
+print ('Файлы записаны')
 input('Нажмите Enter для выхода')

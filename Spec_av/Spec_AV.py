@@ -451,6 +451,12 @@ while True: #цикл перебора страниц cat_excav
     page_counter +=1
     print(f"Страница экскаваторы - {page_counter}")
 
-df.to_excel(f"spec_av_{current_time_str}.xlsx", index=False)
+path1 = f"D:/parsing/spec.av.by/spec_av_{current_time_str}.xlsx"
+path2 = f"//192.168.11.194/омиип рабочая/00_Базы/02_Базы по ценам/11_парсинг/spec.av.by/spec_av_{current_time_str}.xlsx"
+
+df.to_excel(path1, index=False)
+df.to_excel(path2, index=False)
 
 print(f"Данные сохранены в файл, обработано {page_counter} страниц")
+print ('Файлы записаны')
+input('Нажмите Enter для выхода')
