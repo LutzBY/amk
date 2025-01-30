@@ -35,421 +35,104 @@ page_counter = 1
 current_time_str = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 print(current_time_str)
 
-excel_location = 'spec_av.xlsx'
-cat_dst = "&categories[0][category]=6"
-cat_communal = "&categories[0][category]=7"
-cat_forest = "&categories[0][category]=8"
-cat_loaders ="&categories[0][category]=4"
-cat_excav = "&categories[0][category]=1"
-
-"https://spec.av.by/filter?price_currency=2&categories[0][category]=6&page=3"
+categories = {
+    "ДСТ": "&categories[0][category]=6",
+    "Коммуналка": "&categories[0][category]=7",
+    "Лес": "&categories[0][category]=8",
+    "Погрузчики": "&categories[0][category]=4",
+    "Экскаваторы": "&categories[0][category]=1"
+}
+# пример корректной ссылки - https://spec.av.by/filter?price_currency=2&categories[0][category]=7&page=9
 
 df = pd.DataFrame(columns=['Main', 'ID', 'Price', 'PriceBYN', 'Pub Date', 'Seller', 'URL', 'Location', 'Condition', 'Name', 'Type', 'Year'])
-page_counter = 1
 
-while True: #цикл перебора страниц cat_dst
-    url_cycle = url_page + cat_dst + "&page=" + str(page_counter)
+def fetch_data (category_name, category_query):
+    global df
+    page_counter = 1
 
-    #Функция
-    response = requests.get(url_cycle, headers=headers)
+    while True: #цикл перебора страниц cat_dst
+        url_cycle = url_page + category_query + "&page=" + str(page_counter)
 
-    src = response.text
-    soup = BeautifulSoup(src, 'lxml')
-    #Проверка на доступность страницы
-    if response.status_code != 200:
-        print(f"Ошибка загрузки страницы: {url_cycle} код:", response.status_code)
-        break
+        #Функция
+        response = requests.get(url_cycle, headers=headers)
 
-    script_element = soup.find("script", id="__NEXT_DATA__") #Достаем жсон
-    empty_page_element = soup.find("div", class_="listing__empty") #проверка надписи "не нашли ничего"
-    #Проверка имеется ли табличка на странице
-    if empty_page_element:
-        print(f"Найдено не нашли объяв в ДСТ, , {url_cycle}")
-        break
+        src = response.text
+        soup = BeautifulSoup(src, 'lxml')
+        #Проверка на доступность страницы
+        if response.status_code != 200:
+            print(f"Ошибка загрузки страницы: {url_cycle} код:", response.status_code)
+            break
 
-    #Проверка имеется ли жсон на странице
-    if script_element is None:
-        print("Элемент script не найден")
-        break
+        script_element = soup.find("script", id="__NEXT_DATA__") #Достаем жсон
+        empty_page_element = soup.find("div", class_="listing__empty") #проверка надписи "не нашли ничего"
+        #Проверка имеется ли табличка на странице
+        if empty_page_element:
+            print(f"Найдено не нашли объяв в {category_name}, , {url_cycle}")
+            break
 
-    json_string = script_element.string #Конвертируем жсон в стринг
-    data = json.loads(json_string) #Пакуем в data
+        #Проверка имеется ли жсон на странице
+        if script_element is None:
+            print("Элемент script не найден")
+            break
 
-    #Пустые хранилища
-    ids = []
-    prices = []
-    pricesbyn = []
-    publisheds = []
-    sellers = []
-    urlss = []
-    locations = []
-    conditions = []
-    names = []
-    types = []
-    years = []
+        json_string = script_element.string #Конвертируем жсон в стринг
+        data = json.loads(json_string) #Пакуем в data
 
-    for item in data['props']['initialState']['filter']['main']['adverts']:
-        advert_id = item['id']
-        price = item['price']['usd']['amount']
-        pricebyn = item['price']['byn']['amount']
-        published_at = item['publishedAt']
-        seller = item['sellerName']
-        properties = item['properties']
-        public_url = item['publicUrl']
-        location = item['locationName']
-        if isinstance(item['metadata'], dict):
-            condition = item['metadata']['condition']['label']
-        else:
-            condition = 'н.и.'
+        #Пустые хранилища
+        ids = []
+        prices = []
+        pricesbyn = []
+        publisheds = []
+        sellers = []
+        urlss = []
+        locations = []
+        conditions = []
+        names = []
+        types = []
+        years = []
 
-        # Искать нужные свойства по имени
-        name = next((prop['value'] for prop in properties if prop['name'] == 'name'), None)
-        type = next((prop['value'] for prop in properties if prop['name'] == 'sub_category'), None)
-        year = next((prop['value'] for prop in properties if prop['name'] == 'year'), None)
+        for item in data['props']['initialState']['filter']['main']['adverts']:
+            advert_id = item['id']
+            price = item['price']['usd']['amount']
+            pricebyn = item['price']['byn']['amount']
+            published_at = item['publishedAt']
+            seller = item['sellerName']
+            properties = item['properties']
+            public_url = item['publicUrl']
+            location = item['locationName']
+            if isinstance(item['metadata'], dict):
+                condition = item['metadata']['condition']['label']
+            else:
+                condition = 'н.и.'
 
-        # Добавить значения в списки
-        ids.append(advert_id)
-        prices.append(price)
-        pricesbyn.append(pricebyn)
-        publisheds.append(published_at)
-        sellers.append(seller)
-        urlss.append(public_url)
-        locations.append(location)
-        conditions.append(condition)
-        names.append(name)
-        types.append(type)
-        years.append(year)
+            # Искать нужные свойства по имени
+            name = next((prop['value'] for prop in properties if prop['name'] == 'name'), None)
+            type = next((prop['value'] for prop in properties if prop['name'] == 'sub_category'), None)
+            year = next((prop['value'] for prop in properties if prop['name'] == 'year'), None)
 
-    
-    for id, price, pricebyn, published, seller, url, location, condition, name, type, year in zip(ids, prices, pricesbyn, publisheds, sellers, urlss, locations, conditions, names, types, years):
-        datetime_obj = datetime.strptime(published, '%Y-%m-%dT%H:%M:%S%z')
-        date_normal = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
-        print(f"Price - {price}, Date - {date_normal}, Brand - {name} {type}, Year - {year}, URL - {url}")
-        df.loc[len(df)] = ("ДСТ", id, price, pricebyn, published, seller, url, location, condition, name, type, year)
-    page_counter +=1
-    print(f"Страница ДСТ - {page_counter}")
-page_counter = 1
-while True: #цикл перебора страниц cat_communal
-    url_cycle = url_page + cat_communal + "&page=" + str(page_counter)
+            # Добавить значения в списки
+            ids.append(advert_id)
+            prices.append(price)
+            pricesbyn.append(pricebyn)
+            publisheds.append(published_at)
+            sellers.append(seller)
+            urlss.append(public_url)
+            locations.append(location)
+            conditions.append(condition)
+            names.append(name)
+            types.append(type)
+            years.append(year)
 
-    #Функция
-    response = requests.get(url_cycle, headers=headers)
+        for id, price, pricebyn, published, seller, url, location, condition, name, type, year in zip(ids, prices, pricesbyn, publisheds, sellers, urlss, locations, conditions, names, types, years):
+            datetime_obj = datetime.strptime(published, '%Y-%m-%dT%H:%M:%S%z')
+            date_normal = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
+            print(f"Price - {price}, Date - {date_normal}, Brand - {name} {type}, Year - {year}, URL - {url}")
+            df.loc[len(df)] = (category_name, id, price, pricebyn, published, seller, url, location, condition, name, type, year)
+        page_counter +=1
+        print(f"Страница {category_name} - {page_counter}")
 
-    src = response.text
-    soup = BeautifulSoup(src, 'lxml')
-    #Проверка на доступность страницы
-    if response.status_code != 200:
-        print(f"Ошибка загрузки страницы: {url_cycle} код:", response.status_code)
-        break
-
-    script_element = soup.find("script", id="__NEXT_DATA__") #Достаем жсон
-    empty_page_element = soup.find("div", class_="listing__empty") #проверка надписи "не нашли ничего"
-    #Проверка имеется ли табличка на странице
-    if empty_page_element:
-        print(f"Найдено не нашли объяв в коммунал, {url_cycle}")
-        break
-    
-    #Проверка имеется ли жсон на странице
-    if script_element is None:
-        print("Элемент script не найден")
-        break
-
-    json_string = script_element.string #Конвертируем жсон в стринг
-    data = json.loads(json_string) #Пакуем в data
-
-    #Пустые хранилища
-    ids = []
-    prices = []
-    pricesbyn = []
-    publisheds = []
-    sellers = []
-    urlss = []
-    locations = []
-    conditions = []
-    names = []
-    types = []
-    years = []
-
-    for item in data['props']['initialState']['filter']['main']['adverts']:
-        advert_id = item['id']
-        price = item['price']['usd']['amount']
-        pricebyn = item['price']['byn']['amount']
-        published_at = item['publishedAt']
-        seller = item['sellerName']
-        properties = item['properties']
-        public_url = item['publicUrl']
-        location = item['locationName']
-        if isinstance(item['metadata'], dict):
-            condition = item['metadata']['condition']['label']
-        else:
-            condition = 'н.и.'
-
-        # Искать нужные свойства по имени
-        name = next((prop['value'] for prop in properties if prop['name'] == 'name'), None)
-        type = next((prop['value'] for prop in properties if prop['name'] == 'sub_category'), None)
-        year = next((prop['value'] for prop in properties if prop['name'] == 'year'), None)
-
-        # Добавить значения в списки
-        ids.append(advert_id)
-        prices.append(price)
-        pricesbyn.append(pricebyn)
-        publisheds.append(published_at)
-        sellers.append(seller)
-        urlss.append(public_url)
-        locations.append(location)
-        conditions.append(condition)
-        names.append(name)
-        types.append(type)
-        years.append(year)
-
-    
-    for id, price, pricebyn, published, seller, url, location, condition, name, type, year in zip(ids, prices, pricesbyn, publisheds, sellers, urlss, locations, conditions, names, types, years):
-        datetime_obj = datetime.strptime(published, '%Y-%m-%dT%H:%M:%S%z')
-        date_normal = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
-        print(f"Price - {price}, Date - {date_normal}, Brand - {name} {type}, Year - {year}, URL - {url}")
-        df.loc[len(df)] = ("Коммуналка",id, price, pricebyn, published, seller, url, location, condition, name, type, year)
-    page_counter +=1
-    print(f"Страница коммунал - {page_counter}")
-page_counter = 1
-while True: #цикл перебора страниц cat_forest
-    url_cycle = url_page + cat_forest + "&page=" + str(page_counter)
-
-    #Функция
-    response = requests.get(url_cycle, headers=headers)
-
-    src = response.text
-    soup = BeautifulSoup(src, 'lxml')
-    #Проверка на доступность страницы
-    if response.status_code != 200:
-        print(f"Ошибка загрузки страницы: {url_cycle} код:", response.status_code)
-        break
-    empty_page_element = soup.find("div", class_="listing__empty") #проверка надписи "не нашли ничего"
-    #Проверка имеется ли жсон на странице
-    if empty_page_element:
-        print(f"Найдено не нашли объяв в лесу, {url_cycle}")
-        break
-    script_element = soup.find("script", id="__NEXT_DATA__") #Достаем жсон
-    #Проверка имеется ли жсон на странице
-    if script_element is None:
-        print("Элемент script не найден")
-        break
-
-    json_string = script_element.string #Конвертируем жсон в стринг
-    data = json.loads(json_string) #Пакуем в data
-
-    #Пустые хранилища
-    ids = []
-    prices = []
-    pricesbyn = []
-    publisheds = []
-    sellers = []
-    urlss = []
-    locations = []
-    conditions = []
-    names = []
-    types = []
-    years = []
-
-    for item in data['props']['initialState']['filter']['main']['adverts']:
-        advert_id = item['id']
-        price = item['price']['usd']['amount']
-        pricebyn = item['price']['byn']['amount']
-        published_at = item['publishedAt']
-        seller = item['sellerName']
-        properties = item['properties']
-        public_url = item['publicUrl']
-        location = item['locationName']
-        if isinstance(item['metadata'], dict):
-            condition = item['metadata']['condition']['label']
-        else:
-            condition = 'н.и.'
-
-        # Искать нужные свойства по имени
-        name = next((prop['value'] for prop in properties if prop['name'] == 'name'), None)
-        type = next((prop['value'] for prop in properties if prop['name'] == 'sub_category'), None)
-        year = next((prop['value'] for prop in properties if prop['name'] == 'year'), None)
-
-        # Добавить значения в списки
-        ids.append(advert_id)
-        prices.append(price)
-        pricesbyn.append(pricebyn)
-        publisheds.append(published_at)
-        sellers.append(seller)
-        urlss.append(public_url)
-        locations.append(location)
-        conditions.append(condition)
-        names.append(name)
-        types.append(type)
-        years.append(year)
-
-    
-    for id, price, pricebyn, published, seller, url, location, condition, name, type, year in zip(ids, prices, pricesbyn, publisheds, sellers, urlss, locations, conditions, names, types, years):
-        datetime_obj = datetime.strptime(published, '%Y-%m-%dT%H:%M:%S%z')
-        date_normal = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
-        print(f"Price - {price}, Date - {date_normal}, Brand - {name} {type}, Year - {year}, URL - {url}")
-        df.loc[len(df)] = ("Лес",id, price, pricebyn, published, seller, url, location, condition, name, type, year)
-    page_counter +=1
-    print(f"Страница лесное - {page_counter}")
-page_counter = 1
-while True: #цикл перебора страниц cat_loaders
-    url_cycle = url_page + cat_loaders + "&page=" + str(page_counter)
-
-    #Функция
-    response = requests.get(url_cycle, headers=headers)
-
-    src = response.text
-    soup = BeautifulSoup(src, 'lxml')
-    #Проверка на доступность страницы
-    if response.status_code != 200:
-        print(f"Ошибка загрузки страницы: {url_cycle} код:", response.status_code)
-        break
-    empty_page_element = soup.find("div", class_="listing__empty") #проверка надписи "не нашли ничего"
-    #Проверка имеется ли жсон на странице
-    if empty_page_element:
-        print(f"Найдено не нашли объяв, {url_cycle}")
-        break
-    script_element = soup.find("script", id="__NEXT_DATA__") #Достаем жсон
-    #Проверка имеется ли жсон на странице
-    if script_element is None:
-        print("Элемент script не найден")
-        break
-
-    json_string = script_element.string #Конвертируем жсон в стринг
-    data = json.loads(json_string) #Пакуем в data
-
-    #Пустые хранилища
-    ids = []
-    prices = []
-    pricesbyn = []
-    publisheds = []
-    sellers = []
-    urlss = []
-    locations = []
-    conditions = []
-    names = []
-    types = []
-    years = []
-
-    for item in data['props']['initialState']['filter']['main']['adverts']:
-        advert_id = item['id']
-        price = item['price']['usd']['amount']
-        pricebyn = item['price']['byn']['amount']
-        published_at = item['publishedAt']
-        seller = item['sellerName']
-        properties = item['properties']
-        public_url = item['publicUrl']
-        location = item['locationName']
-        if isinstance(item['metadata'], dict):
-            condition = item['metadata']['condition']['label']
-        else:
-            condition = 'н.и.'
-
-        # Искать нужные свойства по имени
-        name = next((prop['value'] for prop in properties if prop['name'] == 'name'), None)
-        type = next((prop['value'] for prop in properties if prop['name'] == 'sub_category'), None)
-        year = next((prop['value'] for prop in properties if prop['name'] == 'year'), None)
-
-        # Добавить значения в списки
-        ids.append(advert_id)
-        prices.append(price)
-        pricesbyn.append(pricebyn)
-        publisheds.append(published_at)
-        sellers.append(seller)
-        urlss.append(public_url)
-        locations.append(location)
-        conditions.append(condition)
-        names.append(name)
-        types.append(type)
-        years.append(year)
-
-    
-    for id, price, pricebyn, published, seller, url, location, condition, name, type, year in zip(ids, prices, pricesbyn, publisheds, sellers, urlss, locations, conditions, names, types, years):
-        datetime_obj = datetime.strptime(published, '%Y-%m-%dT%H:%M:%S%z')
-        date_normal = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
-        print(f"Price - {price}, Date - {date_normal}, Brand - {name} {type}, Year - {year}, URL - {url}")
-        df.loc[len(df)] = ("Погрузчики",id, price, pricebyn, published, seller, url, location, condition, name, type, year)
-    page_counter +=1
-    print(f"Страница погрузчики - {page_counter}")
-page_counter = 1
-while True: #цикл перебора страниц cat_excav
-    url_cycle = url_page + cat_excav + "&page=" + str(page_counter)
-
-    #Функция
-    response = requests.get(url_cycle, headers=headers)
-
-    src = response.text
-    soup = BeautifulSoup(src, 'lxml')
-    #Проверка на доступность страницы
-    if response.status_code != 200:
-        print(f"Ошибка загрузки страницы: {url_cycle} код:", response.status_code)
-        break
-    empty_page_element = soup.find("div", class_="listing__empty") #проверка надписи "не нашли ничего"
-    #Проверка имеется ли жсон на странице
-    if empty_page_element:
-        print(f"Найдено не нашли объяв в экскав, {url_cycle}")
-        break
-    script_element = soup.find("script", id="__NEXT_DATA__") #Достаем жсон
-    #Проверка имеется ли жсон на странице
-    if script_element is None:
-        print("Элемент script не найден")
-        break
-
-    json_string = script_element.string #Конвертируем жсон в стринг
-    data = json.loads(json_string) #Пакуем в data
-
-    #Пустые хранилища
-    ids = []
-    prices = []
-    pricesbyn = []
-    publisheds = []
-    sellers = []
-    urlss = []
-    locations = []
-    conditions = []
-    names = []
-    types = []
-    years = []
-
-    for item in data['props']['initialState']['filter']['main']['adverts']:
-        advert_id = item['id']
-        price = item['price']['usd']['amount']
-        pricebyn = item['price']['byn']['amount']
-        published_at = item['publishedAt']
-        seller = item['sellerName']
-        properties = item['properties']
-        public_url = item['publicUrl']
-        location = item['locationName']
-        if isinstance(item['metadata'], dict):
-            condition = item['metadata']['condition']['label']
-        else:
-            condition = 'н.и.'
-
-        # Искать нужные свойства по имени
-        name = next((prop['value'] for prop in properties if prop['name'] == 'name'), None)
-        type = next((prop['value'] for prop in properties if prop['name'] == 'sub_category'), None)
-        year = next((prop['value'] for prop in properties if prop['name'] == 'year'), None)
-
-        # Добавить значения в списки
-        ids.append(advert_id)
-        prices.append(price)
-        pricesbyn.append(pricebyn)
-        publisheds.append(published_at)
-        sellers.append(seller)
-        urlss.append(public_url)
-        locations.append(location)
-        conditions.append(condition)
-        names.append(name)
-        types.append(type)
-        years.append(year)
-
-    
-    for id, price, pricebyn, published, seller, url, location, condition, name, type, year in zip(ids, prices, pricesbyn, publisheds, sellers, urlss, locations, conditions, names, types, years):
-        datetime_obj = datetime.strptime(published, '%Y-%m-%dT%H:%M:%S%z')
-        date_normal = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
-        print(f"Price - {price}, Date - {date_normal}, Brand - {name} {type}, Year - {year}, URL - {url}")
-        df.loc[len(df)] = ("Экскаваторы",id, price, pricebyn, published, seller, url, location, condition, name, type, year)
-    page_counter +=1
-    print(f"Страница экскаваторы - {page_counter}")
+for category_name, category_query in categories.items():
+    fetch_data(category_name, category_query)
 
 path1 = f"D:/parsing/spec.av.by/spec_av_{current_time_str}.xlsx"
 path2 = f"//192.168.11.194/омиип рабочая/00_Базы/02_Базы по ценам/11_парсинг/spec.av.by/spec_av_{current_time_str}.xlsx"
@@ -458,5 +141,4 @@ df.to_excel(path1, index=False)
 df.to_excel(path2, index=False)
 
 print(f"Данные сохранены в файл, обработано {page_counter} страниц")
-print ('Файлы записаны')
 input('Нажмите Enter для выхода')
