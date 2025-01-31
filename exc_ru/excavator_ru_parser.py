@@ -13,7 +13,7 @@ import time
 from requests.exceptions import RequestException, ConnectionError
 from itertools import zip_longest
 
-#cd C:\Users\lutsevich\Desktop\av_parcer\для работы\exc_ru
+#cd C:\  \для работы\exc_ru
 #pyinstaller --onefile --console excavator_ru_parser.py
 
 # Чтение текущей даты

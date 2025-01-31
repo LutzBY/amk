@@ -9,7 +9,8 @@ import json
 import os
 from tqdm import tqdm
 from requests.exceptions import SSLError
-#cd C:\Users\lutsevich\Desktop\av_parcer\для работы\Spec_av
+#cd C:\ 
+# \av_parcer\для работы\Spec_av
 #pyinstaller --onefile --console spec_av.py
 
 headers = {
@@ -67,7 +68,7 @@ def fetch_data (category_name, category_query):
         empty_page_element = soup.find("div", class_="listing__empty") #проверка надписи "не нашли ничего"
         #Проверка имеется ли табличка на странице
         if empty_page_element:
-            print(f"Найдено не нашли объяв в {category_name}, , {url_cycle}")
+            print(f"Не нашли объяв в {category_name}, , {url_cycle}")
             break
 
         #Проверка имеется ли жсон на странице
