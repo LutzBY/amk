@@ -132,6 +132,28 @@ def fetch_data (category_name, category_query):
         page_counter +=1
         print(f"Страница {category_name} - {page_counter}")
 
+# По spec.av
+for category_name, category_query in categories.items():
+    fetch_data(category_name, category_query)
+
+# По agro.av
+url_page = "https://agro.av.by/filter?price_currency=2"
+page_counter = 1
+
+categories = {
+    "Трактор": "&categories[0][category]=1",
+    "Обработка и подготовка почвы": "&categories[0][category]=2",
+    "Посев и посадка": "&categories[0][category]=3",
+    "Уход за культурами": "&categories[0][category]=4",
+    "Сбор зерновых культур": "&categories[0][category]=5",
+    "Сбор кормов": "&categories[0][category]=6",
+    "Сбор овощей": "&categories[0][category]=7",
+    "Сбор других культур": "&categories[0][category]=8",
+    "Послеуборочная обработка": "&categories[0][category]=9",
+    "Животноводство": "&categories[0][category]=10",
+    "Минитехника": "&categories[0][category]=11"
+}
+
 for category_name, category_query in categories.items():
     fetch_data(category_name, category_query)
 
