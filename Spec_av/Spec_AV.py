@@ -9,6 +9,8 @@ import json
 import os
 from tqdm import tqdm
 from requests.exceptions import SSLError
+import tkinter as tk
+from tkinter import messagebox
 #cd C:\ 
 # \av_parcer\для работы\Spec_av
 #pyinstaller --onefile --console spec_av.py
@@ -47,9 +49,29 @@ categories = {
 
 df = pd.DataFrame(columns=['Main', 'ID', 'Price', 'PriceBYN', 'Pub Date', 'Seller', 'URL', 'Location', 'Condition', 'Name', 'Type', 'Year'])
 
+# messagebox для завершения программы
+def show_completion_message(page_counter, ad_counter):
+    # Создаём корневое окно
+    root = tk.Tk()
+    root.withdraw()  # Скрываем главное окно, чтобы не было видно
+
+    # Устанавливаем окно поверх всех
+    root.attributes('-topmost', True)
+
+    # Отображаем сообщение о завершении
+    messagebox.showinfo(
+        title="Выполнение завершено",
+        message=f"Выполнение завершено, пройдено {page_counter} страниц, собрано {ad_counter} объявлений"
+    )
+
+    # Закрываем корневое окно
+    root.destroy()
+
 def fetch_data (category_name, category_query):
     global df
+    global ad_counter
     page_counter = 1
+    ad_counter = 0
 
     while True: #цикл перебора страниц cat_dst
         url_cycle = url_page + category_query + "&page=" + str(page_counter)
@@ -129,6 +151,7 @@ def fetch_data (category_name, category_query):
             date_normal = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
             print(f"Price - {price}, Date - {date_normal}, Brand - {name} {type}, Year - {year}, URL - {url}")
             df.loc[len(df)] = (category_name, id, price, pricebyn, published, seller, url, location, condition, name, type, year)
+            ad_counter +=1
         page_counter +=1
         print(f"Страница {category_name} - {page_counter}")
 
@@ -164,4 +187,5 @@ df.to_excel(path1, index=False)
 df.to_excel(path2, index=False)
 
 print(f"Данные сохранены в файл, обработано {page_counter} страниц")
-input('Нажмите Enter для выхода')
+
+show_completion_message(page_counter, ad_counter)

@@ -12,6 +12,8 @@ import pandas as pd
 import time
 from requests.exceptions import RequestException, ConnectionError
 from itertools import zip_longest
+import tkinter as tk
+from tkinter import messagebox
 
 #cd C:\  \для работы\exc_ru
 #pyinstaller --onefile --console excavator_ru_parser.py
@@ -20,7 +22,6 @@ from itertools import zip_longest
 current_time_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 print(f"Привет! Текущая дата - {current_time_str}")
 
-
 # Счетчики
 number = 1
 page_counter = 1
@@ -28,6 +29,24 @@ page_generation = ''
 stop_flag = False
 df = pd.DataFrame(columns=['ID', 'Name', 'Date', 'Price RUB', 'Price USD', 'Type', 'Seller', 'Description', 'Prim. Location', 'URL'])
 df_date = datetime.now().strftime('%Y-%m-%d')
+
+# messagebox для завершения программы
+def show_completion_message(page_counter, number):
+    # Создаём корневое окно
+    root = tk.Tk()
+    root.withdraw()  # Скрываем главное окно, чтобы не было видно
+
+    # Устанавливаем окно поверх всех
+    root.attributes('-topmost', True)
+
+    # Отображаем сообщение о завершении
+    messagebox.showinfo(
+        title="Выполнение завершено",
+        message=f"Выполнение завершено, пройдено {page_counter} страниц, собрано {number} объявлений"
+    )
+
+    # Закрываем корневое окно
+    root.destroy()
 
 cookies = {
     '_ym_uid': '1545027567707528589',
@@ -179,4 +198,5 @@ df.to_excel(path1, index=False)
 df.to_excel(path2, index=False)
 
 print ('Файлы записаны')
-input('Нажмите Enter для выхода')
+
+show_completion_message(page_counter, number)
