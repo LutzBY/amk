@@ -10,7 +10,7 @@ import psycopg2
 import smtplib
 import pandas as pd
 import time
-from requests.exceptions import RequestException, ConnectionError
+from requests.exceptions import RequestException, ConnectionError, ConnectTimeout
 from itertools import zip_longest
 import tkinter as tk
 from tkinter import messagebox
@@ -183,7 +183,7 @@ while stop_flag == False:
         else:
             print (f'Ошибка чтения страницы - {response_page.status_code}')
             break
-    except RequestException or ConnectionError as e:
+    except RequestException or ConnectionError or ConnectTimeout as e:
         print(f"Произошла ошибка при запросе страницы {page_counter}: {e}")
         time.sleep(60)
         continue
