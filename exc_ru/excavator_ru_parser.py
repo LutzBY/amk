@@ -14,6 +14,7 @@ from requests.exceptions import RequestException, ConnectionError, ConnectTimeou
 from itertools import zip_longest
 import tkinter as tk
 from tkinter import messagebox
+import certifi
 
 #cd C:\  \для работы\exc_ru
 #pyinstaller --onefile --console excavator_ru_parser.py
@@ -50,44 +51,42 @@ def show_completion_message(page_counter, number):
 
 cookies = {
     '_ym_uid': '1545027567707528589',
-    '_ym_d': '1719303718',
-    '_gcl_au': '1.1.1793393708.1719303719',
     '_ga': 'GA1.1.255704567.1719303719',
-    'tb_favourites_hash': '171930371832733292',
-    'cc_cookie': '{"categories":["necessary","analytics","targeting"],"level":["necessary","analytics","targeting"],"revision":0,"data":null,"rfc_cookie":false,"consent_date":"2024-06-25T08:22:22.588Z","consent_uuid":"0b05ba09-2875-4dc8-b667-50ab3b395a27","last_consent_update":"2024-06-25T08:22:22.588Z"}',
-    'sbjs_migrations': '1418474375998%3D1',
-    'sbjs_first_add': 'fd%3D2024-08-09%2010%3A24%3A14%7C%7C%7Cep%3Dhttps%3A%2F%2Fexkavator.ru%2Fmain%2Fnews%3Futm_source%3Dmain_page%26utm_medium%3Dmenu%26utm_campaign%3Dnews%7C%7C%7Crf%3Dhttps%3A%2F%2Fexkavator.ru%2Fmain%2Fnews%3Futm_source%3Dmain_page%26utm_medium%3Dmenu%26utm_campaign%3Dnews%26__cf_chl_tk%3DOlmPOphRNJNTsQM5UmeUiodI7gf3gTQsIIY7yGge1yw-1723188245-0.0.1.1-4884',
-    'sbjs_first': 'typ%3Dutm%7C%7C%7Csrc%3Dmain_page%7C%7C%7Cmdm%3Dmenu%7C%7C%7Ccmp%3Dnews%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29',
-    'sbjs_current': 'typ%3Dorganic%7C%7C%7Csrc%3Dgoogle%7C%7C%7Cmdm%3Dorganic%7C%7C%7Ccmp%3D%28none%29%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29',
-    'sbjs_current_add': 'fd%3D2024-08-15%2011%3A43%3A41%7C%7C%7Cep%3Dhttps%3A%2F%2Fexkavator.ru%2Fexcapedia%2Ftechnic%2Frm-terextl155%7C%7C%7Crf%3Dhttps%3A%2F%2Fwww.google.com%2F',
-    'v1_sessions_callibri': '920237060',
     'clbvid': '66c6c80a7e24badc9e6e8f8c',
-    'callibri_start_date': '1724303371064',
-    'callibri_current_page': 'https%3A//exkavator.ru/trade/search/TradeFlag/1/NoPrice/1/pages/',
-    'callibri_page_counter': '29',
-    'cf_clearance': 'oPDvGHacaaxOBptR7bZZjCmyYhPrve1moKNzeAbhG24-1725945431-1.2.1.1-R_jWEYuYQW9l8bpiANk_CV7XOAYEx.IrvPvcHYpS9q0us5.vP7tVAEGBW5OFqSP99tkz5f0gSUh8OzyDHjHXo0wdS8C2P6eqxmREGqGHz4nOIsubMQBe7cCb5AWXO0avJhX7rsxSHgNXGZMS.ykFVMpnX67WMP_vy1Ay6WfGSRZcio4kLzt20mHy6IX38VgKKu.HqImtGzE9jliJf2B0mPVQeMA7ndygm2beXrCbwv6BFEbuigK7Hw0_Z.E9_41PV01DE2rbi55wu.C0DKuX_JyZcsGR_AhOJofGwvhMuZtfhEi7UswjMhMf1jh400JtLtZJ0dEN_XEY1COR_bjgwBjNKowRsF2t6auf4R2s6S3GHLthf9Ns33PZMdWTo2ynSS5gERlPSfbHielzLhbN8wkLN6cuesaeAZmvvozMM7AMkbDm8s1CL2lKwxV5kzah',
+    'real-sklad': '1',
+    'sbjs_current': 'typ%3Dutm%7C%7C%7Csrc%3Dmain_page%7C%7C%7Cmdm%3Dmenu%7C%7C%7Ccmp%3Dnews%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29',
+    '_ym_d': '1736768379',
+    'sbjs_udata': 'vst%3D82%7C%7C%7Cuip%3D%28none%29%7C%7C%7Cuag%3DMozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F131.0.0.0%20Safari%2F537.36',
+    'cc_cookie': '{"categories":["necessary","analytics","targeting"],"level":["necessary","analytics","targeting"],"revision":0,"data":null,"rfc_cookie":false,"consent_date":"2025-04-09T11:58:17.994Z","consent_uuid":"cf03ed80-d5c8-4e29-b443-183257c07b1c","last_consent_update":"2025-04-09T11:58:17.994Z"}',
+    'sbscrformoff': '1',
+    'online-conf1': '1',
+    '__ddg1_': 'ziq14E1dB50LpnRwlji4',
+    '_gcl_au': '1.1.699599966.1750146208',
+    'online-conf3': '1',
+    'cf_clearance': 'r3KU_9.hB667lzBjzCSBFRAiMzfArBniaKfWE92bsQY-1751017248-1.2.1.1-HBbivou3B7GjyMRnPLN_K6eD4xwW60DSnL1mytTIkTyYzbcJZRLD4HDSiO84Tj1PHciigG8s.s.Czpd9.9P_.vI3HNyZd4esHjGZPZID.iZluFp1N9iK5aiuB0x8riAtNLzXxfDYe10YoQyfb._RUhkGl4dOyS278CP1y6Tlph7vGjPD0LA6rKAP3dK_LTt1gr8BWqkauVe3ZaXDi_b7UNR_aLJlF97CyGL2_JBEKdTvQUghhURNtzLcNw0Vqj8Dvqp3_kPtef9efTt8.ASTwS35rH4HQDuK9n_ZMXaAedMlDdfsPilC_3h6L4olbQC8Z2l4OYsY.EBREJhaZbMCsX990svNnDDGASSMU_.zYo057UUq1eNvxSuleXUSMsg7',
+    'tb_favourites_hash': '175101725057965090',
+    'sl-session': 'qzU+cb3KbGgFNjUkW0l7Vw==',
     '_ym_isad': '1',
-    'sbjs_udata': 'vst%3D51%7C%7C%7Cuip%3D%28none%29%7C%7C%7Cuag%3DMozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F128.0.0.0%20Safari%2F537.36',
-    'v1_referrer_callibri': 'https%3A//exkavator.ru/trade/search/TradeFlag/1/NoPrice/1/pages/%3F__cf_chl_tk%3DbFXOjJU_QMJEBJJrPXhb9P7HwXgOucbvjPyHq3iCwvs-1725945431-0.0.1.1-9556',
-    'exkavator_session': 'a%3A5%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%22b7cb5fca0cd619acff16dc8e163481ae%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A12%3A%2293.85.160.97%22%3Bs%3A10%3A%22user_agent%22%3Bs%3A111%3A%22Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F128.0.0.0+Safari%2F537.36%22%3Bs%3A13%3A%22last_activity%22%3Bi%3A1725952796%3Bs%3A9%3A%22user_data%22%3Bs%3A0%3A%22%22%3B%7Dcea228a96d0fac6efb511a450b95c0fa',
-    '_ga_16VD85X6Z6': 'GS1.1.1725952793.35.0.1725952798.55.0.0',
+    '_ym_visorc': 'w',
+    'exkavator_session': 'a%3A5%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%2246daa8cf0e088c699f25d6c957ab5e7b%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A13%3A%2237.45.252.163%22%3Bs%3A10%3A%22user_agent%22%3Bs%3A111%3A%22Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F137.0.0.0+Safari%2F537.36%22%3Bs%3A13%3A%22last_activity%22%3Bi%3A1751873853%3Bs%3A9%3A%22user_data%22%3Bs%3A0%3A%22%22%3B%7D41d21f0e08d1720338dde81ed275ddaf',
+    '_ga_16VD85X6Z6': 'GS2.1.s1751873879$o70$g1$t1751874015$j60$l0$h0',
 }
 
 headers = {
     'accept': 'text/css,*/*;q=0.1',
     'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,be-BY;q=0.6,be;q=0.5',
     'cache-control': 'no-cache',
-    # 'cookie': '_ym_uid=1545027567707528589; _ym_d=1719303718; _gcl_au=1.1.1793393708.1719303719; _ga=GA1.1.255704567.1719303719; tb_favourites_hash=171930371832733292; cc_cookie={"categories":["necessary","analytics","targeting"],"level":["necessary","analytics","targeting"],"revision":0,"data":null,"rfc_cookie":false,"consent_date":"2024-06-25T08:22:22.588Z","consent_uuid":"0b05ba09-2875-4dc8-b667-50ab3b395a27","last_consent_update":"2024-06-25T08:22:22.588Z"}; sbjs_migrations=1418474375998%3D1; sbjs_first_add=fd%3D2024-08-09%2010%3A24%3A14%7C%7C%7Cep%3Dhttps%3A%2F%2Fexkavator.ru%2Fmain%2Fnews%3Futm_source%3Dmain_page%26utm_medium%3Dmenu%26utm_campaign%3Dnews%7C%7C%7Crf%3Dhttps%3A%2F%2Fexkavator.ru%2Fmain%2Fnews%3Futm_source%3Dmain_page%26utm_medium%3Dmenu%26utm_campaign%3Dnews%26__cf_chl_tk%3DOlmPOphRNJNTsQM5UmeUiodI7gf3gTQsIIY7yGge1yw-1723188245-0.0.1.1-4884; sbjs_first=typ%3Dutm%7C%7C%7Csrc%3Dmain_page%7C%7C%7Cmdm%3Dmenu%7C%7C%7Ccmp%3Dnews%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29; sbjs_current=typ%3Dorganic%7C%7C%7Csrc%3Dgoogle%7C%7C%7Cmdm%3Dorganic%7C%7C%7Ccmp%3D%28none%29%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29; sbjs_current_add=fd%3D2024-08-15%2011%3A43%3A41%7C%7C%7Cep%3Dhttps%3A%2F%2Fexkavator.ru%2Fexcapedia%2Ftechnic%2Frm-terextl155%7C%7C%7Crf%3Dhttps%3A%2F%2Fwww.google.com%2F; v1_sessions_callibri=920237060; clbvid=66c6c80a7e24badc9e6e8f8c; callibri_start_date=1724303371064; callibri_current_page=https%3A//exkavator.ru/trade/search/TradeFlag/1/NoPrice/1/pages/; callibri_page_counter=29; cf_clearance=oPDvGHacaaxOBptR7bZZjCmyYhPrve1moKNzeAbhG24-1725945431-1.2.1.1-R_jWEYuYQW9l8bpiANk_CV7XOAYEx.IrvPvcHYpS9q0us5.vP7tVAEGBW5OFqSP99tkz5f0gSUh8OzyDHjHXo0wdS8C2P6eqxmREGqGHz4nOIsubMQBe7cCb5AWXO0avJhX7rsxSHgNXGZMS.ykFVMpnX67WMP_vy1Ay6WfGSRZcio4kLzt20mHy6IX38VgKKu.HqImtGzE9jliJf2B0mPVQeMA7ndygm2beXrCbwv6BFEbuigK7Hw0_Z.E9_41PV01DE2rbi55wu.C0DKuX_JyZcsGR_AhOJofGwvhMuZtfhEi7UswjMhMf1jh400JtLtZJ0dEN_XEY1COR_bjgwBjNKowRsF2t6auf4R2s6S3GHLthf9Ns33PZMdWTo2ynSS5gERlPSfbHielzLhbN8wkLN6cuesaeAZmvvozMM7AMkbDm8s1CL2lKwxV5kzah; _ym_isad=1; sbjs_udata=vst%3D51%7C%7C%7Cuip%3D%28none%29%7C%7C%7Cuag%3DMozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F128.0.0.0%20Safari%2F537.36; v1_referrer_callibri=https%3A//exkavator.ru/trade/search/TradeFlag/1/NoPrice/1/pages/%3F__cf_chl_tk%3DbFXOjJU_QMJEBJJrPXhb9P7HwXgOucbvjPyHq3iCwvs-1725945431-0.0.1.1-9556; exkavator_session=a%3A5%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%22b7cb5fca0cd619acff16dc8e163481ae%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A12%3A%2293.85.160.97%22%3Bs%3A10%3A%22user_agent%22%3Bs%3A111%3A%22Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F128.0.0.0+Safari%2F537.36%22%3Bs%3A13%3A%22last_activity%22%3Bi%3A1725952796%3Bs%3A9%3A%22user_data%22%3Bs%3A0%3A%22%22%3B%7Dcea228a96d0fac6efb511a450b95c0fa; _ga_16VD85X6Z6=GS1.1.1725952793.35.0.1725952798.55.0.0',
     'pragma': 'no-cache',
     'priority': 'u=0',
     'referer': 'https://exkavator.ru/',
-    'sec-ch-ua': '"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"',
+    'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"Windows"',
     'sec-fetch-dest': 'style',
     'sec-fetch-mode': 'no-cors',
     'sec-fetch-site': 'same-site',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    # 'cookie': '_ym_uid=1545027567707528589; _ga=GA1.1.255704567.1719303719; clbvid=66c6c80a7e24badc9e6e8f8c; real-sklad=1; sbjs_current=typ%3Dutm%7C%7C%7Csrc%3Dmain_page%7C%7C%7Cmdm%3Dmenu%7C%7C%7Ccmp%3Dnews%7C%7C%7Ccnt%3D%28none%29%7C%7C%7Ctrm%3D%28none%29; _ym_d=1736768379; sbjs_udata=vst%3D82%7C%7C%7Cuip%3D%28none%29%7C%7C%7Cuag%3DMozilla%2F5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F131.0.0.0%20Safari%2F537.36; cc_cookie={"categories":["necessary","analytics","targeting"],"level":["necessary","analytics","targeting"],"revision":0,"data":null,"rfc_cookie":false,"consent_date":"2025-04-09T11:58:17.994Z","consent_uuid":"cf03ed80-d5c8-4e29-b443-183257c07b1c","last_consent_update":"2025-04-09T11:58:17.994Z"}; sbscrformoff=1; online-conf1=1; __ddg1_=ziq14E1dB50LpnRwlji4; _gcl_au=1.1.699599966.1750146208; online-conf3=1; cf_clearance=r3KU_9.hB667lzBjzCSBFRAiMzfArBniaKfWE92bsQY-1751017248-1.2.1.1-HBbivou3B7GjyMRnPLN_K6eD4xwW60DSnL1mytTIkTyYzbcJZRLD4HDSiO84Tj1PHciigG8s.s.Czpd9.9P_.vI3HNyZd4esHjGZPZID.iZluFp1N9iK5aiuB0x8riAtNLzXxfDYe10YoQyfb._RUhkGl4dOyS278CP1y6Tlph7vGjPD0LA6rKAP3dK_LTt1gr8BWqkauVe3ZaXDi_b7UNR_aLJlF97CyGL2_JBEKdTvQUghhURNtzLcNw0Vqj8Dvqp3_kPtef9efTt8.ASTwS35rH4HQDuK9n_ZMXaAedMlDdfsPilC_3h6L4olbQC8Z2l4OYsY.EBREJhaZbMCsX990svNnDDGASSMU_.zYo057UUq1eNvxSuleXUSMsg7; tb_favourites_hash=175101725057965090; sl-session=qzU+cb3KbGgFNjUkW0l7Vw==; _ym_isad=1; _ym_visorc=w; exkavator_session=a%3A5%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%2246daa8cf0e088c699f25d6c957ab5e7b%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A13%3A%2237.45.252.163%22%3Bs%3A10%3A%22user_agent%22%3Bs%3A111%3A%22Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F137.0.0.0+Safari%2F537.36%22%3Bs%3A13%3A%22last_activity%22%3Bi%3A1751873853%3Bs%3A9%3A%22user_data%22%3Bs%3A0%3A%22%22%3B%7D41d21f0e08d1720338dde81ed275ddaf; _ga_16VD85X6Z6=GS2.1.s1751873879$o70$g1$t1751874015$j60$l0$h0',
 }
 
 # сбор кукисов 1
@@ -106,10 +105,10 @@ while stop_flag == False:
     url_page = f'https://exkavator.ru/trade/search/TradeFlag/1/NoPrice/1/pages/{page_generation}'
     
     # сбор кукисов 2
-    session_с = session.get(url_page)
+    session_с = session.get(url_page, headers=headers, cookies=session.cookies, verify=certifi.where())
 
     try:
-        response_page = requests.get(url_page, headers=headers, cookies=session.cookies)
+        response_page = requests.get(url_page, headers=headers, cookies=session.cookies, verify=certifi.where())
         page = response_page.text
 
         if response_page.status_code == 200:
