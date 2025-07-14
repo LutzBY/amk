@@ -43,7 +43,9 @@ categories = {
     "Коммуналка": "&categories[0][category]=7",
     "Лес": "&categories[0][category]=8",
     "Погрузчики": "&categories[0][category]=4",
-    "Экскаваторы": "&categories[0][category]=1"
+    "Экскаваторы": "&categories[0][category]=1",
+    "Краны": "&categories[0][category]=2",
+    "Подъемники и автовышки": "&categories[0][category]=3"
 }
 # пример корректной ссылки - https://spec.av.by/filter?price_currency=2&categories[0][category]=7&page=9
 
