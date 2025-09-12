@@ -102,12 +102,12 @@ usd_rub_date = usd_rub_date.strftime('%Y-%m-%d')
 print(f'Курс USD-RUB на дату {usd_rub_date} составляет {usd_rub}')
 
 while stop_flag == False:
-    url_page = f'https://exkavator.ru/trade/search/TradeFlag/1/NoPrice/1/pages/{page_generation}'
-    
-    # сбор кукисов 2
-    session_с = session.get(url_page, headers=headers, cookies=session.cookies, verify=certifi.where())
-
     try:
+        url_page = f'https://exkavator.ru/trade/search/TradeFlag/1/NoPrice/1/pages/{page_generation}'
+        
+        # сбор кукисов 2
+        session_с = session.get(url_page, headers=headers, cookies=session.cookies, verify=certifi.where())
+    
         response_page = requests.get(url_page, headers=headers, cookies=session.cookies, verify=certifi.where())
         page = response_page.text
 
