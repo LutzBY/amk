@@ -11,6 +11,7 @@ from tqdm import tqdm
 from requests.exceptions import SSLError
 import tkinter as tk
 from tkinter import messagebox
+import time
 #cd C:\ 
 # \av_parcer\для работы\Spec_av
 #pyinstaller --onefile --console spec_av.py
@@ -156,6 +157,7 @@ def fetch_data (category_name, category_query):
             ad_counter +=1
         page_counter +=1
         print(f"Страница {category_name} - {page_counter}")
+        time.sleep(5)
 
 # По spec.av
 for category_name, category_query in categories.items():
